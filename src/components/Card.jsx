@@ -71,9 +71,11 @@ const ItemCon = styled(CircleIcon)`
     padding-top: 3px;
     font-size: 18px;
     color: var(--white);
+    background: ${({ isSelected }) => isSelected ? 'var(--orange)' : 'var(--dark-blue-low)'};
 
     &:hover {
-        background: var(--medium-grey);
+        background: ${({ isSelected }) => isSelected ? 'var(--orange)' : 'var(--medium-grey)'};
+        ;
     }
 `
 
@@ -90,6 +92,15 @@ const Button = styled.button`
   &:hover {
     background: var(--white);
     color: var(--orange);
+  }
+
+  &:disabled {
+    background: var(--medium-grey);
+    color: var(--white);
+  }
+  &:disabled:hover {
+    background: var(--medium-grey);
+    color: var(--white);
   }
 `;
 
@@ -127,6 +138,7 @@ const ButtonClose = styled(Button)`
 
 function Card() {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null)
 
   return (
     <Ca>
@@ -146,14 +158,14 @@ function Card() {
           </Desc>
           <RatingCon>
             {ratingItems.map((item) => (
-                <ItemCon key={item}>{item}</ItemCon>
+                <ItemCon isSelected={selectedItem === item} key={item} onClick={() => setSelectedItem(item)}>{item}</ItemCon>
             ))}
           </RatingCon>
-          <Button onClick={() => setIsFlipped(true)}>Send</Button>
+          <Button disabled={!selectedItem} onClick={() => setIsFlipped(true)}>Send</Button>
         </Front>
         <Back>
             <Img src={"/images/illustration-thank-you.svg"} />
-            <Sel>You selected 4 out of 5</Sel>
+            {selectedItem && <Sel>You selected {selectedItem} out of 5</Sel>}
           <Headline>Thank you</Headline>
           <Desc>
             We appriciate you taking the time to give a rating. If you ever need
